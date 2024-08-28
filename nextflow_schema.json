@@ -1,0 +1,46 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com//master/nextflow_schema.json",
+    "title": " pipeline parameters",
+    "description": "",
+    "type": "object",
+    "definitions": {
+        "parameters": {
+            "title": "Parameters",
+            "type": "object",
+            "description": "Parameters for nf-hello-gatk pipeline",
+            "default": "",
+            "properties": {
+                "reads_bam": {
+                    "type": "string",
+                    "description": "Path to samplesheet containing list of BAMs."
+                },
+                "genome_reference": {
+                    "type": "string",
+                    "description": "Path to genome FASTA file (.fasta)"
+                },
+                "genome_reference_index": {
+                    "type": "string",
+                    "description": "Path to genome FASTA index (.fai)"
+                },
+                "genome_reference_dict": {
+                    "type": "string",
+                    "description": "Path to genome GATK dictionary file (.dict)"
+                },
+                "calling_intervals": {
+                    "type": "string",
+                    "description": "Path to intervals list for variant calling."
+                },
+                "cohort_name": {
+                    "type": "string",
+                    "description": "Name of cohort."
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/definitions/parameters"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+.DS_Store
+.env
+.nextflow*
+.nf-test.log
+.nf-test*
+*.pyc
+data/
+nf-test
+results/
+test.xml
+testing*
+testing/
+work
+work/
