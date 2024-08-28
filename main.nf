@@ -19,7 +19,8 @@ params.cohort_name = "family_trio"
  */
 process SAMTOOLS_INDEX {
 
-    container 'quay.io/biocontainers/samtools:1.19.2--h50ea8bc_1' 
+    container 'quay.io/biocontainers/samtools:1.19.2--h50ea8bc_1'
+    conda "bioconda::samtools=1.19.2"
 
     input:
         tuple val(id), path(input_bam)
@@ -38,7 +39,8 @@ process SAMTOOLS_INDEX {
  */
 process GATK_HAPLOTYPECALLER {
 
-    container "docker.io/broadinstitute/gatk:4.5.0.0"
+    container "quay.io/biocontainers/gatk4:4.5.0.0--py36hdfd78af_0"
+    conda "bioconda::gatk4=4.5.0.0"
 
     input:
         tuple val(id), path(input_bam), path(input_bam_index)
@@ -65,7 +67,8 @@ process GATK_HAPLOTYPECALLER {
  */
 process GATK_JOINTGENOTYPING {
 
-    container "docker.io/broadinstitute/gatk:4.5.0.0"
+    container "quay.io/biocontainers/gatk4:4.5.0.0--py36hdfd78af_0"
+    conda "bioconda::gatk4=4.5.0.0"
 
     input:
         path(sample_map)
