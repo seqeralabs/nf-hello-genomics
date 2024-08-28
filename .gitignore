@@ -4,7 +4,6 @@
 .nf-test.log
 .nf-test*
 *.pyc
-data/
 nf-test
 results/
 test.xml
