@@ -2,18 +2,14 @@
  * Pipeline parameters
  */
 
-// Execution environment setup
-params.projectDir = "/workspace/gitpod/nf-training/hello-nextflow" 
-projectDir = params.projectDir
-
 // Primary input
-params.reads_bam = "${projectDir}/data/samplesheet.csv"
+params.reads_bam = "${workflow.projectDir}/data/samplesheet.csv"
 
 // Accessory files
-params.genome_reference = "${projectDir}/data/ref/ref.fasta"
-params.genome_reference_index = "${projectDir}/data/ref/ref.fasta.fai"
-params.genome_reference_dict = "${projectDir}/data/ref/ref.dict"
-params.calling_intervals = "${projectDir}/data/intervals.list"
+params.genome_reference = "${workflow.projectDir}/data/ref/ref.fasta"
+params.genome_reference_index = "${workflow.projectDir}/data/ref/ref.fasta.fai"
+params.genome_reference_dict = "${workflow.projectDir}/data/ref/ref.dict"
+params.calling_intervals = "${workflow.projectDir}/data/ref/intervals.bed"
 
 // Base name for final output file
 params.cohort_name = "family_trio"
@@ -102,7 +98,7 @@ workflow {
     // Create input channel from samplesheet in CSV format (via CLI parameter)
     reads_ch = Channel.fromPath(params.reads_bam)
                         .splitCsv(header: true)
-                        .map{row -> [row.id, file(row.reads_bam)]}
+                        .map{row -> [row.id, file(row.reads_bam, checkIfExists: true)]}
 
     // Create index file for input BAM file
     SAMTOOLS_INDEX(reads_ch)
