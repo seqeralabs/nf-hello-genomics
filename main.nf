@@ -1,3 +1,5 @@
+nextflow.preview.output = true
+
 /*
  * Pipeline parameters
  */
@@ -140,4 +142,8 @@ workflow {
         ref_dict_ch,
         calling_intervals_ch
     )
+}
+
+output {
+    directory 'results'
 }

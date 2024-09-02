@@ -24,7 +24,13 @@ To run this pipeline, you need to have the following software installed:
 
 ### Running the Pipeline
 
-To execute the pipeline, use the following command:
+To run the pipeline, use the following command:
+
+```bash
+nextflow run seqeralabs/nf-hello-gatk
+```
+
+If you wish you can manually supply your own parameters using command line options. These are the defaults specified from the root of the repository:
 
 ```bash
 nextflow run seqeralabs/nf-hello-gatk \
@@ -36,7 +42,7 @@ nextflow run seqeralabs/nf-hello-gatk \
     --cohort_name my_cohort
 ```
 
-This will run the pipeline using the specified BAM files and reference data.
+This will run the pipeline using the supplied BAM files and reference data.
 
 #### Parameters
 
