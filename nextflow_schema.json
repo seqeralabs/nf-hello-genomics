@@ -14,34 +14,31 @@
         "bams": {
           "type": "string",
           "description": "Path to BAM input files",
-          "format": "path",
-          "default": "${workflow.projectDir}/data/bam/*.bam"
+          "format": "path"
         },
         "reference": {
           "type": "string",
           "description": "Path to genome FASTA file (.fasta)",
-          "format": "file-path",
-          "default": "${workflow.projectDir}/data/ref/ref.fasta"
+          "format": "file-path"
         },
         "reference_index": {
           "type": "string",
           "description": "Path to genome FASTA index (.fai)",
-          "default": "${workflow.projectDir}/data/ref/ref.fasta.fai"
+          "format": "file-path"
         },
         "reference_dict": {
           "type": "string",
           "description": "Path to genome GATK dictionary file (.dict)",
-          "default": "{workflow.projectDir}/data/ref/ref.dict"
+          "format": "file-path"
         },
         "calling_intervals": {
           "type": "string",
           "description": "Path to intervals for variant calling in BED format (.bed)",
-          "default": "${workflow.projectDir}/data/ref/intervals.bed"
+          "format": "file-path"
         },
         "cohort_name": {
           "type": "string",
-          "description": "Name of cohort to be used as output file",
-          "default": "myCohort"
+          "description": "Name of cohort to be used as output file"
         }
       }
     }
