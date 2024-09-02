@@ -3,12 +3,12 @@
  */
 
 // Primary input
-params.reads_bam = "${workflow.projectDir}/data/samplesheet.csv"
+params.bams = "${workflow.projectDir}/data/bam/*.bam"
 
 // Accessory files
-params.genome_reference = "${workflow.projectDir}/data/ref/ref.fasta"
-params.genome_reference_index = "${workflow.projectDir}/data/ref/ref.fasta.fai"
-params.genome_reference_dict = "${workflow.projectDir}/data/ref/ref.dict"
+params.reference = "${workflow.projectDir}/data/ref/ref.fasta"
+params.reference_index = "${workflow.projectDir}/data/ref/ref.fasta.fai"
+params.reference_dict = "${workflow.projectDir}/data/ref/ref.dict"
 params.calling_intervals = "${workflow.projectDir}/data/ref/intervals.bed"
 
 // Base name for final output file
@@ -71,8 +71,7 @@ process GATK_JOINTGENOTYPING {
     conda "bioconda::gatk4=4.5.0.0"
 
     input:
-        path(sample_map)
-        val(cohort_name)
+        tuple val(cohort_name), path(vcfs), path(idxs)
         path ref_fasta
         path ref_index
         path ref_dict
@@ -82,9 +81,11 @@ process GATK_JOINTGENOTYPING {
         path "${cohort_name}.joint.vcf"
         path "${cohort_name}.joint.vcf.idx"
 
+    script:
+    def inputs = vcfs.collect { "-V ${it}" }.join(' ')
     """
     gatk GenomicsDBImport \
-        --sample-name-map ${sample_map} \
+        ${inputs} \
         --genomicsdb-workspace-path ${cohort_name}_gdb \
         -L ${interval_list}
 
@@ -98,35 +99,45 @@ process GATK_JOINTGENOTYPING {
 
 workflow {
 
-    // Create input channel from samplesheet in CSV format (via CLI parameter)
-    reads_ch = Channel.fromPath(params.reads_bam)
-                        .splitCsv(header: true)
-                        .map{row -> [row.id, file(row.reads_bam, checkIfExists: true)]}
+    // Create input channel from BAM files
+    // We convert it to a tuple with the file name and the file path
+    // See https://www.nextflow.io/docs/latest/script.html#getting-file-attributes
+    bam_ch = Channel.fromPath(params.bams, checkIfExists: true)
+                        .map{bam -> [bam.simpleName, bam]}
+
+    
+    // Create reference channels using the fromPath channel factory
+    // The collect converts from a queue channel to a value channel
+    // See https://www.nextflow.io/docs/latest/channel.html#channel-types for details
+    ref_ch               = Channel.fromPath(params.reference, checkIfExists: true).collect()
+    ref_index_ch         = Channel.fromPath(params.reference_index, checkIfExists: true).collect()
+    ref_dict_ch          = Channel.fromPath(params.reference_dict, checkIfExists: true).collect()
+    calling_intervals_ch = Channel.fromPath(params.calling_intervals, checkIfExists: true).collect()
 
     // Create index file for input BAM file
-    SAMTOOLS_INDEX(reads_ch)
+    SAMTOOLS_INDEX(bam_ch)
 
     // Call variants from the indexed BAM file
     GATK_HAPLOTYPECALLER(
         SAMTOOLS_INDEX.out,
-        params.genome_reference,
-        params.genome_reference_index,
-        params.genome_reference_dict,
-        params.calling_intervals
+        ref_ch,
+        ref_index_ch,
+        ref_dict_ch,
+        calling_intervals_ch
     )
 
-    // Create a sample map of the output GVCFs
-    sample_map = GATK_HAPLOTYPECALLER.out.collectFile(){ id, gvcf, idx ->
-            ["${params.cohort_name}_map.tsv", "${id}\t${gvcf}\t${idx}\n"]
-    }
+    in = GATK_HAPLOTYPECALLER.out
+        .map { id, vcf, idx ->
+            [ params.cohort_name, vcf, idx ]
+        }
+        .groupTuple()
 
     // Consolidate GVCFs and apply joint genotyping analysis
     GATK_JOINTGENOTYPING(
-        sample_map, 
-        params.cohort_name, 
-        params.genome_reference,
-        params.genome_reference_index,
-        params.genome_reference_dict,
-        params.calling_intervals
+        in,
+        ref_ch,
+        ref_index_ch,
+        ref_dict_ch,
+        calling_intervals_ch
     )
 }
