@@ -19,7 +19,7 @@ params.cohort_name = "family_trio"
  */
 process SAMTOOLS_INDEX {
 
-    container 'quay.io/biocontainers/samtools:1.19.2--h50ea8bc_1'
+    container 'community.wave.seqera.io/library/samtools:1.20--b5dfbd93de237464'
     conda "bioconda::samtools=1.19.2"
 
     input:
@@ -39,7 +39,7 @@ process SAMTOOLS_INDEX {
  */
 process GATK_HAPLOTYPECALLER {
 
-    container "quay.io/biocontainers/gatk4:4.5.0.0--py36hdfd78af_0"
+    container "community.wave.seqera.io/library/gatk4:4.5.0.0--730ee8817e436867"
     conda "bioconda::gatk4=4.5.0.0"
 
     input:
@@ -67,7 +67,7 @@ process GATK_HAPLOTYPECALLER {
  */
 process GATK_JOINTGENOTYPING {
 
-    container "quay.io/biocontainers/gatk4:4.5.0.0--py36hdfd78af_0"
+    container "community.wave.seqera.io/library/gatk4:4.5.0.0--730ee8817e436867"
     conda "bioconda::gatk4=4.5.0.0"
 
     input:
@@ -126,7 +126,7 @@ workflow {
         calling_intervals_ch
     )
 
-    in = GATK_HAPLOTYPECALLER.out
+    vcfs_in = GATK_HAPLOTYPECALLER.out
         .map { id, vcf, idx ->
             [ params.cohort_name, vcf, idx ]
         }
@@ -134,7 +134,7 @@ workflow {
 
     // Consolidate GVCFs and apply joint genotyping analysis
     GATK_JOINTGENOTYPING(
-        in,
+        vcfs_in,
         ref_ch,
         ref_index_ch,
         ref_dict_ch,
