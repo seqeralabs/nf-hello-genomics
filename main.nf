@@ -23,10 +23,10 @@ process SAMTOOLS_INDEX {
     conda "bioconda::samtools=1.19.2"
 
     input:
-        tuple val(id), path(input_bam)
+        path input_bam
 
     output:
-        tuple val(id), path(input_bam), path("${input_bam}.bai")
+        tuple path(input_bam), path("${input_bam}.bai")
 
     """
     samtools index '$input_bam'
@@ -43,14 +43,15 @@ process GATK_HAPLOTYPECALLER {
     conda "bioconda::gatk4=4.5.0.0"
 
     input:
-        tuple val(id), path(input_bam), path(input_bam_index)
+        tuple path(input_bam), path(input_bam_index)
         path ref_fasta
         path ref_index
         path ref_dict
         path interval_list
 
     output:
-        tuple val(id), path("${input_bam}.g.vcf"), path("${input_bam}.g.vcf.idx")
+        path "${input_bam}.g.vcf"
+        path "${input_bam}.g.vcf.idx"
 
     """
     gatk HaplotypeCaller \
@@ -71,7 +72,9 @@ process GATK_JOINTGENOTYPING {
     conda "bioconda::gatk4=4.5.0.0"
 
     input:
-        tuple val(cohort_name), path(vcfs), path(idxs)
+        path vcfs
+        path idxs
+        val cohort_name
         path ref_fasta
         path ref_index
         path ref_dict
@@ -103,8 +106,6 @@ workflow {
     // We convert it to a tuple with the file name and the file path
     // See https://www.nextflow.io/docs/latest/script.html#getting-file-attributes
     bam_ch = Channel.fromPath(params.bams, checkIfExists: true)
-                        .map{bam -> [bam.simpleName, bam]}
-
     
     // Create reference channels using the fromPath channel factory
     // The collect converts from a queue channel to a value channel
@@ -126,15 +127,14 @@ workflow {
         calling_intervals_ch
     )
 
-    vcfs_in = GATK_HAPLOTYPECALLER.out
-        .map { id, vcf, idx ->
-            [ params.cohort_name, vcf, idx ]
-        }
-        .groupTuple()
+    all_vcfs = GATK_HAPLOTYPECALLER.out[0].collect()
+    all_tbis = GATK_HAPLOTYPECALLER.out[1].collect()
 
     // Consolidate GVCFs and apply joint genotyping analysis
     GATK_JOINTGENOTYPING(
-        vcfs_in,
+        all_vcfs,
+        all_tbis,
+        params.cohort_name,
         ref_ch,
         ref_index_ch,
         ref_dict_ch,
