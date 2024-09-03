@@ -11,9 +11,9 @@
       "description": "Parameters for nf-hello-gatk pipeline",
       "default": "",
       "properties": {
-        "bams": {
+        "reads_bam": {
           "type": "string",
-          "description": "Path to BAM input files",
+          "description": "Path to BAM input files (.bam)",
           "format": "path"
         },
         "reference": {
