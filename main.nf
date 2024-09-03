@@ -20,7 +20,7 @@ params.cohort_name = "family_trio"
 process SAMTOOLS_INDEX {
 
     container 'community.wave.seqera.io/library/samtools:1.20--b5dfbd93de237464'
-    conda "bioconda::samtools=1.19.2"
+    conda "bioconda::samtools=1.20"
 
     input:
         path input_bam
