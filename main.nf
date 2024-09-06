@@ -1,3 +1,5 @@
+nextflow.preview.output = true
+
 /*
  * Pipeline parameters
  */
@@ -13,6 +15,9 @@ params.calling_intervals = "${workflow.projectDir}/data/ref/intervals.bed"
 
 // Base name for final output file
 params.cohort_name = "family_trio"
+
+// Output directory
+params.outdir = "results"
 
 /*
  * Generate BAM index file
@@ -100,6 +105,52 @@ process GATK_JOINTGENOTYPING {
     """
 }
 
+/*
+ * Generate statistics with bcftools stats
+ */
+process BCFTOOLS_STATS {
+
+    container 'community.wave.seqera.io/library/bcftools:1.20--a7f1d9cdda56cc93'
+    conda "bioconda::bcftools=1.20"
+
+    input:
+        path vcf_file
+
+    output:
+        path "${vcf_file}.stats"
+
+    """
+    bcftools stats ${vcf_file} > ${vcf_file}.stats
+    """
+}
+
+/*
+ * Generate MultiQC report
+ */
+process MULTIQC {
+
+    container 'community.wave.seqera.io/library/multiqc:1.24.1--789bc3917c8666da'
+    conda "bioconda::multiqc=1.11"
+
+    publishDir "${params.outdir}", mode: 'copy'
+
+    input:
+        path input_files
+        val cohort_name
+
+    output:
+        path "${params.cohort_name}_multiqc_report.html"
+
+    """
+    multiqc \\
+        --force \\
+        -o . \\
+        -n ${cohort_name}_multiqc_report.html \\
+        --clean-up \\
+        ${input_files}
+    """
+}
+
 workflow {
 
     // Create input channel from BAM files
@@ -139,5 +190,14 @@ workflow {
         ref_index_ch,
         ref_dict_ch,
         calling_intervals_ch
+    )
+
+    BCFTOOLS_STATS(
+        GATK_HAPLOTYPECALLER.out[0]
+    )
+
+    MULTIQC(
+        BCFTOOLS_STATS.out.collect(),
+        params.cohort_name
     )
 }
