@@ -1,25 +1,6 @@
 nextflow.preview.output = true
 
 /*
- * Pipeline parameters
- */
-
-// Primary input
-params.reads_bam = "${workflow.projectDir}/data/bam/*.bam"
-
-// Accessory files
-params.reference = "${workflow.projectDir}/data/ref/ref.fasta"
-params.reference_index = "${workflow.projectDir}/data/ref/ref.fasta.fai"
-params.reference_dict = "${workflow.projectDir}/data/ref/ref.dict"
-params.calling_intervals = "${workflow.projectDir}/data/ref/intervals.bed"
-
-// Base name for final output file
-params.cohort_name = "family_trio"
-
-// Output directory
-params.outdir = "results"
-
-/*
  * Generate BAM index file
  */
 process SAMTOOLS_INDEX {
@@ -153,6 +134,25 @@ process MULTIQC {
 
 workflow {
 
+    /*
+    * Pipeline parameters
+    */
+
+    // Primary input
+    params.reads_bam = "${workflow.projectDir}/data/bam/*.bam"
+
+    // Accessory files
+    params.reference = "${workflow.projectDir}/data/ref/ref.fasta"
+    params.reference_index = "${workflow.projectDir}/data/ref/ref.fasta.fai"
+    params.reference_dict = "${workflow.projectDir}/data/ref/ref.dict"
+    params.calling_intervals = "${workflow.projectDir}/data/ref/intervals.bed"
+
+    // Base name for final output file
+    params.cohort_name = "family_trio"
+
+    // Output directory
+    params.outdir = "results"
+
     // Create input channel from BAM files
     // We convert it to a tuple with the file name and the file path
     // See https://www.nextflow.io/docs/latest/script.html#getting-file-attributes
@@ -193,7 +193,7 @@ workflow {
     )
 
     BCFTOOLS_STATS(
-        GATK_HAPLOTYPECALLER.out[0]
+        GATK_JOINTGENOTYPING.out[0]
     )
 
     MULTIQC(
