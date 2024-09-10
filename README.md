@@ -87,10 +87,10 @@ For more advanced usage, such as customizing the workflow, modifying the process
 
 Contributions are welcome! Please submit a pull request or open an issue if you have suggestions for improvements or find any bugs.
 
-## License
+## Credits & Copyright
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+All training material was originally written by [Seqera](https://seqera.io) but has been made open-source ([CC BY-NC-ND](https://creativecommons.org/licenses/by-nc-nd/4.0/)) for the community.
 
-## Acknowledgments
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" src="docs/assets/img/cc_by-nc-nd.svg" /></a>
 
-This pipeline is developed and maintained by [Seqera Labs](https://seqera.io/). It is inspired by the broader community of bioinformatics and computational biology professionals who contribute to open-source genomics tools.
+> Copyright 2020-2023, Seqera. All examples and descriptions are licensed under the <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
