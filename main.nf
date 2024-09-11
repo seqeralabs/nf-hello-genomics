@@ -45,7 +45,6 @@ process GATK_HAPLOTYPECALLER {
         -I ${input_bam} \
         -O ${input_bam}.g.vcf \
         -L ${interval_list} \
-        --tmp-dir . \
         -ERC GVCF
     """
 }
@@ -77,14 +76,12 @@ process GATK_JOINTGENOTYPING {
     gatk GenomicsDBImport \
         ${input_vcfs} \
         --genomicsdb-workspace-path ${cohort_name}_gdb \
-        --tmp-dir . \
         -L ${interval_list}
 
     gatk GenotypeGVCFs \
         -R ${ref_fasta} \
         -V gendb://${cohort_name}_gdb \
         -O ${cohort_name}.joint.vcf \
-        --tmp-dir . \
         -L ${interval_list}
     """
 }

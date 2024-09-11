@@ -8,19 +8,17 @@ The **nf-hello-gatk** pipeline performs a variant calling analysis using GATK Ha
 
 ## Getting Started
 
+If you are following the hello-nextflow series on https://training.nextflow.io/, you will create a similar version of this pipeline. This one has a few small differences:
+
+- It adds `bcftools stats` and MultiQC to demonstrate some basic quality control and documentation.
+- It writes some outputs using the [workflow output publishing syntax](https://www.nextflow.io/docs/latest/workflow.html#publishing-outputs)
+
 ### Prerequisites
 
-To run this pipeline, you need to have the following software installed:
+To run this pipeline locally, you need to have the following software installed:
 
 - [Nextflow](https://www.nextflow.io/)
 - [Docker](https://www.docker.com/) (optional but recommended for containerized execution)
-- [GATK](https://gatk.broadinstitute.org/) (handled internally by the pipeline)
-
-### Pre-requisites
-
-1. Ensure that you have Nextflow installed and accessible in your `PATH`.
-1. (Preferred) Ensure Docker is installed and available
-    a. If you do not wish to use Docker you must use an alternative method of handling software dependencies
 
 ### Running the Pipeline
 
