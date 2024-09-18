@@ -1,5 +1,3 @@
-nextflow.preview.output = true
-
 /*
  * Generate BAM index file
  */
