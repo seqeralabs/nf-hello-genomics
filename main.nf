@@ -109,7 +109,7 @@ process BCFTOOLS_STATS {
 process MULTIQC {
 
     container 'community.wave.seqera.io/library/multiqc:1.24.1--789bc3917c8666da'
-    conda "bioconda::multiqc=1.11"
+    conda "bioconda::multiqc=1.24.1"
 
     publishDir "${params.outdir}", mode: 'copy'
 
