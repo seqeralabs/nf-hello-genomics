@@ -1,6 +1,10 @@
 name: test-pipeline
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 # Cancel if a newer run is started
 concurrency:
