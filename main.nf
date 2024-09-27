@@ -136,8 +136,11 @@ workflow {
     * Pipeline parameters
     */
 
-    // Primary input
-    params.reads_bam = "${workflow.projectDir}/data/sample_bams.txt"
+
+    // Create input channel from samplesheet in CSV format (via CLI parameter)
+    reads_ch = Channel.fromPath(params.reads_bam)
+                        .splitCsv(header: true)
+                        .map{ row -> [row.id, file(row.bam)] }
 
     // Accessory files
     params.reference = "${workflow.projectDir}/data/ref/ref.fasta"
