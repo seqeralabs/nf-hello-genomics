@@ -187,4 +187,13 @@ workflow {
         ref_index_file,
         ref_dict_file
     )
+
+    BCFTOOLS_STATS(
+        GATK_JOINTGENOTYPING.out[0]
+    )
+
+    MULTIQC(
+        BCFTOOLS_STATS.out.collect(),
+        params.cohort_name
+    )
 }
