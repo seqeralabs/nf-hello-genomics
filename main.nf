@@ -23,7 +23,7 @@ process SAMTOOLS_INDEX {
 
     container 'community.wave.seqera.io/library/samtools:1.20--b5dfbd93de237464'
 
-    publishDir "params.outdir", mode: 'symlink'
+    publishDir "$params.outdir", mode: 'symlink'
 
     input:
         path input_bam
@@ -43,7 +43,7 @@ process GATK_HAPLOTYPECALLER {
 
     container "community.wave.seqera.io/library/gatk4:4.5.0.0--730ee8817e436867"
 
-    publishDir "params.outdir", mode: 'symlink'
+    publishDir "$params.outdir", mode: 'symlink'
 
     input:
         tuple path(input_bam), path(input_bam_index)
@@ -73,7 +73,7 @@ process GATK_JOINTGENOTYPING {
 
     container "community.wave.seqera.io/library/gatk4:4.5.0.0--730ee8817e436867"
 
-    publishDir "params.outdir", mode: 'symlink'
+    publishDir "$params.outdir", mode: 'symlink'
 
     input:
         path all_gvcfs
@@ -101,6 +101,52 @@ process GATK_JOINTGENOTYPING {
         -V gendb://${cohort_name}_gdb \
         -L ${interval_list} \
         -O ${cohort_name}.joint.vcf
+    """
+}
+
+/*
+ * Generate statistics with bcftools stats
+ */
+process BCFTOOLS_STATS {
+
+    container 'community.wave.seqera.io/library/bcftools:1.20--a7f1d9cdda56cc93'
+    conda "bioconda::bcftools=1.20"
+
+    input:
+        path vcf_file
+
+    output:
+        path "${vcf_file}.stats"
+
+    """
+    bcftools stats ${vcf_file} > ${vcf_file}.stats
+    """
+}
+
+/*
+ * Generate MultiQC report
+ */
+process MULTIQC {
+
+    container 'community.wave.seqera.io/library/multiqc:1.24.1--789bc3917c8666da'
+    conda "bioconda::multiqc=1.24.1"
+
+    publishDir "${$params.outdir}", mode: 'copy'
+
+    input:
+        path input_files
+        val cohort_name
+
+    output:
+        path "${params.cohort_name}_multiqc_report.html"
+
+    """
+    multiqc \\
+        --force \\
+        -o . \\
+        -n ${cohort_name}_multiqc_report.html \\
+        --clean-up \\
+        ${input_files}
     """
 }
 
