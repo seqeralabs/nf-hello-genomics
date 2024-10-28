@@ -16,6 +16,8 @@ params.intervals        = "${projectDir}/data/ref/intervals.bed"
 // Base name for final output file
 params.cohort_name = "family_trio"
 
+params.outdir = "results"
+
 /*
  * Generate BAM index file
  */
