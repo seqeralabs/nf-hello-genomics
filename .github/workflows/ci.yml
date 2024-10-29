@@ -1,0 +1,28 @@
+name: test-pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  NXF_ANSI_LOG: false
+
+# Cancel if a newer run is started
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  nextflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: setup-nextflow
+        uses: nf-core/setup-nextflow@v1
+
+      - name: run-nextflow
+        run: nextflow run .
