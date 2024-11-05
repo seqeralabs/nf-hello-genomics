@@ -25,7 +25,7 @@ To run this pipeline locally, you need to have the following software installed:
 To run the pipeline, use the following command:
 
 ```bash
-nextflow run seqeralabs/nf-hello-gatk
+nextflow run seqeralabs/nf-hello-gatk -profile my_laptop,demo
 ```
 
 If you wish you can manually supply your own parameters using command line options. These are the defaults specified from the root of the repository:
@@ -67,7 +67,7 @@ nextflow run seqeralabs/nf-hello-gatk \
 
 ### Running with Docker
 
-By default, the pipeline will use Docker for each process. This is enabled via the configuration option in the [nextflow.config](./nextflow.config). Nextflow will handle downloading the necessary Docker images and running the pipeline within containers.
+Using the `my_laptop` profile, the pipeline will use Docker for each process. This is enabled via the configuration option in the [nextflow.config](./nextflow.config). Nextflow will handle downloading the necessary Docker images and running the pipeline within containers.
 
 If you wish to disable this, you can use the following configuration option:
 
