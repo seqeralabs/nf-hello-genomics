@@ -25,4 +25,4 @@ jobs:
         uses: nf-core/setup-nextflow@v1
 
       - name: run-nextflow
-        run: nextflow run . -profile demo
+        run: nextflow run . -profile my_laptop,demo
