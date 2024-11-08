@@ -1,10 +1,10 @@
-# nf-hello-gatk
+# nf-hello-genomics
 
-Welcome to the **nf-hello-gatk** repository! This is a demonstration pipeline built using [Nextflow](https://www.nextflow.io/), designed to showcase a basic genomic analysis workflow incorporating the [GATK (Genome Analysis Toolkit)](https://gatk.broadinstitute.org/). The pipeline is ideal for demonstrating how to handle input and output files via channels and pass them between processes effectively.
+Welcome to the **nf-hello-genomics** repository! This is a demonstration pipeline built using [Nextflow](https://www.nextflow.io/), designed to showcase a basic genomic analysis workflow incorporating the [GATK (Genome Analysis Toolkit)](https://gatk.broadinstitute.org/). The pipeline is ideal for demonstrating how to handle input and output files via channels and pass them between processes effectively.
 
 ## Overview
 
-The **nf-hello-gatk** pipeline performs a variant calling analysis using GATK HaplotypeCaller on a set of BAM files. It comes with test data located in [./data](./data/) that should run in seconds, allowing you to demonstrate the pipeline quickly. Furthermore, it has built-in support for Docker, which simplifies dependency management and ensures consistent execution environments.
+The **nf-hello-genomics** pipeline performs a variant calling analysis using GATK HaplotypeCaller on a set of BAM files. It comes with test data located in [./data](./data/) that should run in seconds, allowing you to demonstrate the pipeline quickly. Furthermore, it has built-in support for Docker, which simplifies dependency management and ensures consistent execution environments.
 
 ## Getting Started
 
@@ -25,13 +25,13 @@ To run this pipeline locally, you need to have the following software installed:
 To run the pipeline, use the following command:
 
 ```bash
-nextflow run seqeralabs/nf-hello-gatk -profile my_laptop,demo
+nextflow run seqeralabs/nf-hello-genomics -profile my_laptop,demo
 ```
 
 If you wish you can manually supply your own parameters using command line options. These are the defaults specified from the root of the repository:
 
 ```bash
-nextflow run seqeralabs/nf-hello-gatk \
+nextflow run seqeralabs/nf-hello-genomics \
     --bams "./data/bam/*.bam" \
     --reference ./data/ref/ref.fasta \
     --reference_index ./data/ref/ref.fasta.fai \
@@ -56,7 +56,7 @@ The pipeline allows for the following input parameters:
 Example of running the pipeline:
 
 ```bash
-nextflow run seqeralabs/nf-hello-gatk \
+nextflow run seqeralabs/nf-hello-genomics \
     --bams "./data/bams/*.bam" \
     --reference ./data/ref/hg38.fasta \
     --reference_index ./data/ref/hg38.fasta.fai \
