@@ -19,7 +19,6 @@
         "outdir": {
           "type": "string",
           "description": "Output directory to write results to.",
-          "default": "results",
           "format": "path"
         },
         "reference": {
